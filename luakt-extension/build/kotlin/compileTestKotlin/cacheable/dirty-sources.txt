@@ -1,0 +1,2 @@
+/Users/rafaelramos/AndroidStudioProjects/demo_android_with_lua_script/luakt-extension/src/test/kotlin/LuaKotlinExTest.kt
+/Users/rafaelramos/AndroidStudioProjects/demo_android_with_lua_script/luakt-extension/src/test/kotlin/luakt/classes.kt

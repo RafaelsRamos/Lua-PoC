@@ -1,0 +1,10 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'java'
+}
+
+dependencies {
+    implementation project(":luakt-core")
+    implementation project(":luakt-luaj")
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+}
