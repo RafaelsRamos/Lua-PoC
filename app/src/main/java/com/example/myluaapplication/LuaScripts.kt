@@ -47,21 +47,10 @@ object LuaScripts {
 
     val commandOne = """
         -- defines a factorial function
-        function fact (n)
-          if n == 0 then
-            return 1
-          else
-            return n * fact(n-1)
-          end
-        end
-        
         LuajLog = luakotlin.bindClass("com.example.myluaapplication.component.LuajLog")
-        ListReturn = luakotlin.bindClass("com.example.myluaapplication.component.ListReturn")
-        LuajLog:d("hello luaj...1")
-        LuajLog:d("hello luaj...2")
-        LuajLog:d("hello luaj...3")
-        LuajLog:d(fact(5))
-        return ListReturn, "hello from lua", 1
-            """.trimIndent()
+        function show_toast_from_lua(context)
+          LuajLog:toast("Hello world", context)
+        end
+        """.trimIndent()
 
 }

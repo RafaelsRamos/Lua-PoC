@@ -4,96 +4,127 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="20dp"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_string_lua"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_simple_lua_file"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="String Luo (load the Lua script from string)"
-        app:layout_constraintBottom_toTopOf="@id/btn_file_lua"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Process lua file"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_lua_file_that_uses_singleton" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_file_lua"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_lua_file_that_uses_singleton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="File Luo (load the Lua script from file or input stream)"
-        app:layout_constraintTop_toBottomOf="@+id/btn_string_lua"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_file_custom_lua" />
+        android:text="Call lua function"
+        app:layout_constraintTop_toBottomOf="@+id/btn_simple_lua_file"
+        app:layout_constraintBottom_toTopOf="@id/btn_pass_primitive_to_lua" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_file_custom_lua"
+        android:id="@+id/btn_pass_primitive_to_lua"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="File Custom Luo (make match function from Java into Lua)"
-        app:layout_constraintTop_toBottomOf="@+id/btn_file_lua"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Pass dynamic primitive input"
+        app:layout_constraintTop_toBottomOf="@+id/btn_lua_file_that_uses_singleton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_file_input_to_luo" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_file_input_to_luo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="File Input To Luo (Send Input to Lua program)"
-        app:layout_constraintTop_toBottomOf="@+id/btn_file_custom_lua"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_file_custom_input_to_luo" />
+        app:layout_constraintBottom_toTopOf="@+id/btn_pass_complex_instance_to_lua" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edt_custom_input"
         android:layout_width="100dp"
-        android:inputType="number"
         android:text="1"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_file_custom_input_to_luo" />
+        app:layout_constraintStart_toEndOf="@id/btn_pass_primitive_to_lua"
+        app:layout_constraintTop_toTopOf="@id/btn_pass_primitive_to_lua"
+        app:layout_constraintBottom_toBottomOf="@id/btn_pass_primitive_to_lua"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_file_custom_input_to_luo"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_pass_complex_instance_to_lua"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="File Input To Luo (Send Custom Input to Lua program)"
-        app:layout_constraintTop_toBottomOf="@+id/btn_file_input_to_luo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_custom_arg" />
+        android:text="Pass complex input"
+        app:layout_constraintTop_toBottomOf="@+id/btn_pass_primitive_to_lua"
+        app:layout_constraintBottom_toTopOf="@+id/process_linear_layout" />
+
+    <LinearLayout
+        android:id="@+id/process_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/btn_pass_complex_instance_to_lua"
+        app:layout_constraintBottom_toTopOf="@id/btn_lua_on_background_Thread">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_process_primitive_from_lua"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="process primitive output"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_process_complex_obj_from_lua"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="process complex output"/>
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_custom_arg"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_lua_on_background_Thread"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Send input as argument to Lua"
-        app:layout_constraintTop_toBottomOf="@+id/btn_file_custom_input_to_luo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_change_custom_arg" />
+        android:text="Run Lua function on background thread"
+        app:layout_constraintTop_toBottomOf="@+id/process_linear_layout"
+        app:layout_constraintBottom_toTopOf="@id/btn_show_toast_from_lua" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_change_custom_arg"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_show_toast_from_lua"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Change input in Lua"
-        app:layout_constraintTop_toBottomOf="@+id/btn_custom_arg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_run_on_background" />
+        android:text="toast from lua script"
+        app:layout_constraintBottom_toTopOf="@id/btn_lua_on_background_Thread"
+        app:layout_constraintTop_toBottomOf="@id/btn_lua_file_with_custom_library" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_run_on_background"
+        android:id="@+id/btn_lua_file_with_custom_library"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Process lua file with custom library"
+        app:layout_constraintTop_toBottomOf="@+id/btn_show_toast_from_lua"
+        app:layout_constraintBottom_toTopOf="@id/logcat_clear" />
+
+    <TextView
+        android:id="@+id/logcat_clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Run Lua on background thread"
-        app:layout_constraintTop_toBottomOf="@+id/btn_change_custom_arg"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Clear"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:padding="6dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/nested_scroll_view"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="#D8D8D8"
+        android:paddingHorizontal="4dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp">
+
+        <TextView
+            android:id="@+id/logcat_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

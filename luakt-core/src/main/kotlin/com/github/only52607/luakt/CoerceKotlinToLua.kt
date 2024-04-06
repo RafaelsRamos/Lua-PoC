@@ -110,3 +110,5 @@ class CoerceKotlinToLua {
         }
     }
 }
+
+fun Any.toLua(): LuaValue = CoerceKotlinToLua.coerce(this)

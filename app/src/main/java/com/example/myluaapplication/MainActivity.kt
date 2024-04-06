@@ -5,11 +5,12 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myluaapplication.component.CustomValue
+import com.example.myluaapplication.logcat.LogcatObserver
 import com.example.myluaapplication.model.Person
 import com.example.myluaapplication.model.toPerson
-import com.github.only52607.luakt.CoerceKotlinToLua
+import com.github.only52607.luakt.toLua
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ import org.luaj.vm2.LuaInteger
 import org.luaj.vm2.LuaValue
 import org.luaj.vm2.Varargs
 import java.io.InputStream
+
 
 class MainActivity : AppCompatActivity(), OnClickListener {
 
@@ -28,61 +30,91 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<Button>(R.id.btn_string_lua).setOnClickListener(this)
-        findViewById<Button>(R.id.btn_file_lua).setOnClickListener(this)
-        findViewById<Button>(R.id.btn_file_custom_lua).setOnClickListener(this)
-        findViewById<Button>(R.id.btn_file_input_to_luo).setOnClickListener(this)
-        findViewById<Button>(R.id.btn_file_custom_input_to_luo).setOnClickListener(this)
-        findViewById<Button>(R.id.btn_custom_arg).setOnClickListener(this)
-        findViewById<Button>(R.id.btn_change_custom_arg).setOnClickListener(this)
-        findViewById<Button>(R.id.btn_run_on_background).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_show_toast_from_lua).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_simple_lua_file).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_lua_file_with_custom_library).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_lua_file_that_uses_singleton).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_pass_primitive_to_lua).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_pass_complex_instance_to_lua).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_process_complex_obj_from_lua).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_process_primitive_from_lua).setOnClickListener(this)
+        findViewById<Button>(R.id.btn_lua_on_background_Thread).setOnClickListener(this)
+        findViewById<TextView>(R.id.logcat_clear).setOnClickListener(this)
+
+        setupLogcatUpdates()
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.btn_string_lua                 -> processLuaContent(LuaScripts.commandOne)
-            R.id.btn_file_lua                   -> processLuaFile("SimpleExample.lua")
-            R.id.btn_file_custom_lua            -> processLuaFile("HyperbolicApp.lua")
-            R.id.btn_file_input_to_luo          -> processLuaFile("ListExample.lua")
-            R.id.btn_file_custom_input_to_luo   -> passDataThroughSingleton()
-            R.id.btn_custom_arg                 -> customInput()
-            R.id.btn_change_custom_arg          -> processTable()
-            R.id.btn_run_on_background          -> runScriptOnBackground()
+            R.id.btn_show_toast_from_lua                 -> {
+                processLuaContent(LuaScripts.commandOne)
+                globals
+                    .get("show_toast_from_lua")
+                    .call(baseContext.toLua())
+            }
+            R.id.btn_simple_lua_file                -> processLuaFile("simple_script.lua")
+            R.id.btn_lua_file_with_custom_library   -> processLuaFile("hyperbolic_app.lua")
+            R.id.btn_lua_file_that_uses_singleton   -> invokeLuaFunction()
+            R.id.btn_pass_primitive_to_lua          -> passPrimitiveInput()
+            R.id.btn_pass_complex_instance_to_lua   -> passComplexInput()
+            R.id.btn_process_complex_obj_from_lua   -> processComplexOutput()
+            R.id.btn_process_primitive_from_lua     -> processPrimitiveOutput()
+            R.id.btn_lua_on_background_Thread       -> runScriptOnBackground()
+            R.id.logcat_clear                       -> LogcatObserver.clear()
         }
     }
 
-    private fun passDataThroughSingleton() {
-        CustomValue.myValue = Integer.parseInt(inputText)
-        processLuaFile("CustomValue.lua")
+    private fun invokeLuaFunction() {
+        processLuaFile("invoke_function.lua")
+        println("Calling invoke_function.lua's print_arr function from Kotlin")
+        globals
+            .get("print_arr")
+            .call()
     }
 
-    private fun customInput() {
-        processLuaFile("CustomArg.lua")
-        val john = Person(name = "John", age = 30)
-        globals.get("print_person").call(CoerceKotlinToLua.coerce(john))
+    private fun passPrimitiveInput() {
+        hideKeyboard()
+        processLuaFile("dynamic_primitive.lua")
+        globals
+            .get("show_toast_with_custom_value")
+            .call(inputText.toLua())
     }
 
-    private fun processTable() {
-        processLuaFile("ChangeArg.lua")
+    private fun passComplexInput() {
+        processLuaFile("complex_input.lua")
         val john = Person(name = "John", age = 30)
-        val olderJohn = globals
-            .get("change_age_and_print_person")
-            .call(CoerceKotlinToLua.coerce(john))
-            .toPerson()
-        println(olderJohn)
+        println("Passing $john to lua")
+        globals
+            .get("print_person")
+            .call(john.toLua())
+    }
+
+    private fun processComplexOutput() {
+        processLuaFile("complex_output.lua")
+        val result = globals
+            .get("tweak_and_return_person")
+            .call()
+
+        val olderJohn = result.toPerson()
+
+        println("Result type: ${result::class.simpleName}")
+        println("Mapped to $olderJohn")
+    }
+
+    private fun processPrimitiveOutput() {
+        processLuaFile("process_output_primitive.lua")
+        val result: Varargs = globals
+            .get("get_word")
+            .call()
+        println("Result type: ${result::class.simpleName}")
+        println("Casting to String: \"${result.tojstring()}\"")
     }
 
     private fun runScriptOnBackground() {
-        processLuaFile("BackgroundExample.lua")
+        processLuaFile("run_on_background.lua")
 
-        println("Calling lua function from main thread")
-        globals.get("lua_function").call(LuaInteger.valueOf(0))
-        println("Finished calling lua function from main thread")
-
-        println("-----------------------------------")
-
-        println("Calling lua function from background thread")
         CoroutineScope(Dispatchers.IO).launch {
+            println("Calling lua function from background thread")
             globals.get("lua_function").call(LuaInteger.valueOf(5))
             println("Finished calling lua function from background thread")
         }
@@ -91,7 +123,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private fun processLuaFile(fileName: String): Varargs {
         val inputStream: InputStream = assets.open(fileName)
         val chuck: LuaValue = globals.load(inputStream, "@$fileName", "bt", globals)
-        return chuck.invoke()
+        return chuck.invoke().also { println("Processed $fileName") }
     }
 
     private fun processLuaContent(content: String): Varargs {
@@ -99,5 +131,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         return chuck.invoke()
     }
 
-}
+    private fun setupLogcatUpdates() {
+        LogcatObserver.subscribe {
+            findViewById<TextView>(R.id.logcat_text_view).text = it
+        }
+    }
 
+}
