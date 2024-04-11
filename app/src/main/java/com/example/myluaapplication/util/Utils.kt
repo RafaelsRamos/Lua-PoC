@@ -1,4 +1,4 @@
-package com.example.myluaapplication
+package com.example.myluaapplication.util
 
 import android.app.Activity
 import android.content.Context

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    tools:context=".ui.fragment.FragmentA">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Service A"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textAlignment="center"/>
+
+            <EditText
+                android:id="@+id/et_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="120dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:hint="Enter amount"/>
+
+            <Button
+                android:id="@+id/success_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="5dp"
+                android:text="Simulate success"
+                android:textColor="@color/black"
+                android:backgroundTint="#B9B9B9"/>
+
+            <Button
+                android:id="@+id/failure_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:text="Simulate failure"
+                android:textColor="@color/black"
+                android:backgroundTint="#B9B9B9"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/back_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/baseline_arrow_back_24" />
+
+        <TextView
+            android:id="@+id/tv_dynamic_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</FrameLayout>

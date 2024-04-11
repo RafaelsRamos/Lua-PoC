@@ -1,6 +1,7 @@
-package com.example.myluaapplication
+package com.example.myluaapplication.lua
 
-import com.example.myluaapplication.component.Hyperbolic
+import com.example.myluaapplication.lua.libs.GuiLib
+import com.example.myluaapplication.lua.libs.NavigationLib
 import com.github.only52607.luakt.lib.KotlinCoroutineLib
 import com.github.only52607.luakt.lib.LuaKotlinLib
 import org.luaj.vm2.Globals
@@ -31,7 +32,8 @@ fun ktGlobals(): Globals {
             JseIoLib(),
             JseOsLib(),
             LuaKotlinLib(),
-            Hyperbolic()
+            NavigationLib,
+            GuiLib
         )
         LoadState.install(this)
         LuaC.install(this)
@@ -40,17 +42,4 @@ fun ktGlobals(): Globals {
 
 fun Globals.loadAll(vararg libs: LuaValue) {
     libs.forEach { load(it) }
-}
-
-
-object LuaScripts {
-
-    val commandOne = """
-        -- defines a factorial function
-        LuajLog = luakotlin.bindClass("com.example.myluaapplication.component.LuajLog")
-        function show_toast_from_lua(context)
-          LuajLog:toast("Hello world", context)
-        end
-        """.trimIndent()
-
 }
